@@ -9,34 +9,32 @@ import {
   handleAction,
   LovelaceCardEditor,
   getLovelace,
-} from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
+} from 'custom-card-helpers';
 
-import type { BoilerplateCardConfig } from './types';
+import type { ProjectCardConfig } from './types';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  BOILERPLATE-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
+  `%c  PROJECT-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
 
-// This puts your card into the UI card picker dialog
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'boilerplate-card',
-  name: 'Boilerplate Card',
+  type: 'project-card',
+  name: 'Project Card',
   description: 'A template custom card for you to create something awesome',
 });
 
-// TODO Name your custom element
-@customElement('boilerplate-card')
-export class BoilerplateCard extends LitElement {
+@customElement('project-card')
+export class ProjectCard extends LitElement {
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
-    return document.createElement('boilerplate-card-editor');
+    return document.createElement('project-card-editor');
   }
 
   public static getStubConfig(): Record<string, unknown> {
@@ -47,10 +45,10 @@ export class BoilerplateCard extends LitElement {
   // https://lit.dev/docs/components/properties/
   @property({ attribute: false }) public hass!: HomeAssistant;
 
-  @state() private config!: BoilerplateCardConfig;
+  @state() private config!: ProjectCardConfig;
 
   // https://lit.dev/docs/components/properties/#accessors-custom
-  public setConfig(config: BoilerplateCardConfig): void {
+  public setConfig(config: ProjectCardConfig): void {
     // TODO Check for required fields and that they are of the proper format
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
@@ -61,7 +59,7 @@ export class BoilerplateCard extends LitElement {
     }
 
     this.config = {
-      name: 'Boilerplate',
+      name: 'Project',
       ...config,
     };
   }
@@ -75,9 +73,10 @@ export class BoilerplateCard extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
+
+
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
-    // TODO Check for stateObj or other necessary things and render a warning if missing
     if (this.config.show_warning) {
       return this._showWarning(localize('common.show_warning'));
     }
@@ -95,7 +94,7 @@ export class BoilerplateCard extends LitElement {
           hasDoubleClick: hasAction(this.config.double_tap_action),
         })}
         tabindex="0"
-        .label=${`Boilerplate: ${this.config.entity || 'No Entity Defined'}`}
+        .label=${`Project: ${this.config.entity || 'No Entity Defined'}`}
       ></ha-card>
     `;
   }
