@@ -49,6 +49,10 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.api_url || '';
   }
 
+  get _timer_interval(): number {
+    return this._config?.timer_interval || 10000;
+  }
+
   get _show_warning(): boolean {
     return this._config?.show_warning || false;
   }
@@ -64,15 +68,15 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
 
     return html`
       <mwc-textfield
-        label="Name (Optional)"
-        .value=${this._name}
-        .configValue=${'name'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
-      <mwc-textfield
         label="API Url"
         .value=${this._api_url}
         .configValue=${'api_url'}
+        @input=${this._valueChanged}
+      ></mwc-textfield>
+      <mwc-textfield
+        label="Timer Interval"
+        .value=${this._timer_interval}
+        .configValue=${'timer_interval'}
         @input=${this._valueChanged}
       ></mwc-textfield>
       <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>

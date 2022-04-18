@@ -10,7 +10,7 @@ import {
   LovelaceCardEditor,
   getLovelace,
 } from 'custom-card-helpers';
-
+import { repeat } from 'lit/directives/repeat.js';
 import type { ProjectCardConfig, ThingiverseResponse } from './types';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
@@ -46,8 +46,9 @@ export class ProjectCard extends LitElement {
       this.displayedCards.shift();
       this.displayedCards.push(values[this.currentIndex]);
       this.currentIndex = (this.currentIndex + 1) % values.length;
+      this.requestUpdate();
     }
-    setTimeout(() => this.updateDisplayCards(values), 5000);
+    setTimeout(() => this.updateDisplayCards(values), this.config.timer_interval);
   }
 
   @property({ attribute: false }) public hass!: HomeAssistant;
@@ -75,6 +76,7 @@ export class ProjectCard extends LitElement {
     this.config = {
       name: 'Project',
       ...config,
+      timer_interval: config.timer_interval || 10000,
     };
   }
 
@@ -82,8 +84,6 @@ export class ProjectCard extends LitElement {
     const response = await fetch(this.config.api_url);
 
     this.apiResponse = await response.json();
-    this.requestUpdate();
-    await this.updateComplete;
 
     for (
       this.currentIndex = 0;
@@ -92,9 +92,8 @@ export class ProjectCard extends LitElement {
     ) {
       this.displayedCards.push(this.apiResponse[this.currentIndex]);
     }
-    this.requestUpdate();
-    await this.updateComplete;
-    setTimeout(() => this.updateDisplayCards(this.apiResponse), 5000);
+
+    setTimeout(() => this.updateDisplayCards(this.apiResponse), this.config.timer_interval);
   }
 
   protected firstUpdated(): void {
@@ -106,21 +105,14 @@ export class ProjectCard extends LitElement {
       return false;
     }
 
-    console.log(changedProps);
-    return hasConfigOrEntityChanged(this, changedProps, false);
+    return hasConfigOrEntityChanged(this, changedProps, true);
   }
 
   protected render(): TemplateResult | void {
-    if (this.config.show_warning) {
-      return this._showWarning(localize('common.show_warning'));
-    }
-
-    if (this.config.show_error) {
-      return this._showError(localize('common.show_error'));
-    }
-
     return html`
-      ${this.displayedCards.map(
+      ${repeat(
+        this.displayedCards,
+        (displayedCard) => displayedCard.id,
         (entry) =>
           html`<ha-card
             @action=${this._handleAction}
@@ -143,21 +135,6 @@ export class ProjectCard extends LitElement {
     if (this.hass && this.config && ev.detail.action) {
       handleAction(this, this.hass, this.config, ev.detail.action);
     }
-  }
-
-  private _showWarning(warning: string): TemplateResult {
-    return html` <hui-warning>${warning}</hui-warning> `;
-  }
-
-  private _showError(error: string): TemplateResult {
-    const errorCard = document.createElement('hui-error-card');
-    errorCard.setConfig({
-      type: 'error',
-      error,
-      origConfig: this.config,
-    });
-
-    return html` ${errorCard} `;
   }
 
   static get styles(): CSSResultGroup {

@@ -53,11 +53,9 @@ export interface TagsEntity {
 // TODO Add your configuration elements here for type-checking
 export interface ProjectCardConfig extends LovelaceCardConfig {
   type: string;
-  name?: string;
-  show_warning?: boolean;
-  show_error?: boolean;
   test_gui?: boolean;
   api_url: string;
+  timer_interval?: number;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
