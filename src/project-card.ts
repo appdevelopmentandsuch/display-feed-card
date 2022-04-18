@@ -11,7 +11,7 @@ import {
   getLovelace,
 } from 'custom-card-helpers';
 
-import type { ProjectCardConfig } from './types';
+import type { ProjectCardConfig, ThingiverseResponse } from './types';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
@@ -41,15 +41,29 @@ export class ProjectCard extends LitElement {
     return {};
   }
 
-  // TODO Add any properities that should cause your element to re-render here
-  // https://lit.dev/docs/components/properties/
+  updateDisplayCards(values: string | any[]): void {
+    if (values && values.length > 0) {
+      this.displayedCards.shift();
+      this.displayedCards.push(values[this.currentIndex]);
+      this.currentIndex = (this.currentIndex + 1) % values.length;
+    }
+    setTimeout(() => this.updateDisplayCards(values), 5000);
+  }
+
   @property({ attribute: false }) public hass!: HomeAssistant;
+
+  @property({ attribute: false })
+  private apiResponse: Array<ThingiverseResponse> = [];
+
+  @property({ attribute: false })
+  private displayedCards: Array<ThingiverseResponse> = [];
+
+  @property({ attribute: false })
+  private currentIndex = 1;
 
   @state() private config!: ProjectCardConfig;
 
-  // https://lit.dev/docs/components/properties/#accessors-custom
   public setConfig(config: ProjectCardConfig): void {
-    // TODO Check for required fields and that they are of the proper format
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
     }
@@ -64,18 +78,38 @@ export class ProjectCard extends LitElement {
     };
   }
 
-  // https://lit.dev/docs/components/lifecycle/#reactive-update-cycle-performing
+  async fetchThings(): Promise<void> {
+    const response = await fetch(this.config.api_url);
+
+    this.apiResponse = await response.json();
+    this.requestUpdate();
+    await this.updateComplete;
+
+    for (
+      this.currentIndex = 0;
+      this.currentIndex < 3 && this.currentIndex < this.apiResponse.length;
+      this.currentIndex++
+    ) {
+      this.displayedCards.push(this.apiResponse[this.currentIndex]);
+    }
+    this.requestUpdate();
+    await this.updateComplete;
+    setTimeout(() => this.updateDisplayCards(this.apiResponse), 5000);
+  }
+
+  protected firstUpdated(): void {
+    this.fetchThings();
+  }
+
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     if (!this.config) {
       return false;
     }
 
+    console.log(changedProps);
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
-
-
-  // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     if (this.config.show_warning) {
       return this._showWarning(localize('common.show_warning'));
@@ -86,16 +120,22 @@ export class ProjectCard extends LitElement {
     }
 
     return html`
-      <ha-card
-        .header=${this.config.name}
-        @action=${this._handleAction}
-        .actionHandler=${actionHandler({
-          hasHold: hasAction(this.config.hold_action),
-          hasDoubleClick: hasAction(this.config.double_tap_action),
-        })}
-        tabindex="0"
-        .label=${`Project: ${this.config.entity || 'No Entity Defined'}`}
-      ></ha-card>
+      ${this.displayedCards.map(
+        (entry) =>
+          html`<ha-card
+            @action=${this._handleAction}
+            .actionHandler=${actionHandler({
+              hasHold: hasAction(this.config.hold_action),
+              hasDoubleClick: hasAction(this.config.double_tap_action),
+            })}
+            .label=${entry?.name}
+            tabindex="0"
+          >
+            <img src=${entry?.thumbnail} style="width: 100%; height: 100%" />
+            <h4>${entry?.name}</h4>
+            <h5>${entry?.creator?.name}</h5>
+          </ha-card>`,
+      )}
     `;
   }
 
@@ -120,8 +160,12 @@ export class ProjectCard extends LitElement {
     return html` ${errorCard} `;
   }
 
-  // https://lit.dev/docs/components/styles/
   static get styles(): CSSResultGroup {
-    return css``;
+    return css`
+      ha-card {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+      }
+    `;
   }
 }

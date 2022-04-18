@@ -45,8 +45,8 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.name || '';
   }
 
-  get _entity(): string {
-    return this._config?.entity || '';
+  get _api_url(): string {
+    return this._config?.api_url || '';
   }
 
   get _show_warning(): boolean {
@@ -62,27 +62,17 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
       return html``;
     }
 
-    // You can restrict on domain type
-    const entities = Object.keys(this.hass.states);
-
     return html`
-      <mwc-select
-        naturalMenuWidth
-        fixedMenuPosition
-        label="Entity (Required)"
-        .configValue=${'entity'}
-        .value=${this._entity}
-        @selected=${this._valueChanged}
-        @closed=${(ev) => ev.stopPropagation()}
-      >
-        ${entities.map((entity) => {
-          return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
-        })}
-      </mwc-select>
       <mwc-textfield
         label="Name (Optional)"
         .value=${this._name}
         .configValue=${'name'}
+        @input=${this._valueChanged}
+      ></mwc-textfield>
+      <mwc-textfield
+        label="API Url"
+        .value=${this._api_url}
+        .configValue=${'api_url'}
         @input=${this._valueChanged}
       ></mwc-textfield>
       <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
