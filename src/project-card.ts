@@ -47,7 +47,7 @@ export class ProjectCard extends LitElement {
 
   private generateURL(endpoint: string): string {
     const appendChar = endpoint.includes('?') ? '&' : '?';
-    return `https://api.thingiverse.com/${endpoint}${appendChar}access_token=${this.config.api_key}`;
+    return `https://api.thingiverse.com/${endpoint}${appendChar}access_token=${this.config.api_key}&per_page=50`;
   }
 
   updateDisplayCards(values: string | any[]): void {
@@ -83,7 +83,6 @@ export class ProjectCard extends LitElement {
     }
 
     this.config = {
-      name: 'Project',
       ...config,
       endpoints: config.endpoints || '',
       timer_interval: config.timer_interval || 5,
@@ -146,7 +145,7 @@ export class ProjectCard extends LitElement {
         (displayedCard) => displayedCard.id,
         (entry) =>
           html`<ha-card
-            @action=${this._handleAction}
+            @action=${() => this._handleAction(entry.public_url)}
             .actionHandler=${actionHandler({
               hasHold: hasAction(this.config.hold_action),
               hasDoubleClick: hasAction(this.config.double_tap_action),
@@ -154,17 +153,18 @@ export class ProjectCard extends LitElement {
             .label=${entry?.name}
             tabindex="0"
           >
-            <img src=${entry?.thumbnail} style="width: 100%; height: 100%" />
+            <img src=${entry?.thumbnail} style="width: 100%; height: 100%;" />
             <h4>${entry?.name}</h4>
             <h5>${entry?.creator?.name}</h5>
+            <img src="https://thingiverse.com/favicon.ico" style="width: 1.5rem; height: 1.5rem;" />
           </ha-card>`,
       )}
     `;
   }
 
-  private _handleAction(ev: ActionHandlerEvent): void {
-    if (this.hass && this.config && ev.detail.action) {
-      handleAction(this, this.hass, this.config, ev.detail.action);
+  private _handleAction(public_url?: string): void {
+    if (public_url) {
+      window.open(public_url, '_blank');
     }
   }
 
@@ -173,6 +173,7 @@ export class ProjectCard extends LitElement {
       ha-card {
         padding: 1rem;
         margin-bottom: 0.75rem;
+        cursor: pointer;
       }
     `;
   }
