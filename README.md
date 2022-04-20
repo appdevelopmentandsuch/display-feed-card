@@ -1,13 +1,13 @@
 # Thingiverse Card by [@appdevelopmentandsuch](https://www.github.com/appdevelopmentandsuch)
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/graphs/commit-activity)
 [![GitHub license](https://img.shields.io/github/license/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/blob/main/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/appdevelopmentandsuch/thingiverse-card.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/releases/)
-[![GitHub tag](https://img.shields.io/github/tag/appdevelopmentandsuch/thingiverse-card.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/tags/)
-[![Github all releases](https://img.shields.io/github/downloads/appdevelopmentandsuch/thingiverse-card/total.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/releases/)
-[![GitHub stars](https://img.shields.io/github/stars/appdevelopmentandsuch/thingiverse-card.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/stargazers/)
-[![GitHub issues](https://img.shields.io/github/issues/appdevelopmentandsuch/thingiverse-card.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/issues/)
-[![GitHub issues-closed](https://img.shields.io/github/issues-closed/appdevelopmentandsuch/thingiverse-card.svg)](https://GitHub.com/appdevelopmentandsuch/thingiverse-card/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub release](https://img.shields.io/github/release/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/releases/)
+[![GitHub tag](https://img.shields.io/github/tag/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/tags/)
+[![Github all releases](https://img.shields.io/github/downloads/appdevelopmentandsuch/thingiverse-card/total.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/releases/)
+[![GitHub stars](https://img.shields.io/github/stars/appdevelopmentandsuch/thingiverse-card.svg?style=social&label=Star&maxAge=2592000)](https://github.com/appdevelopmentandsuch/thingiverse-card/stargazers/)
+[![GitHub issues](https://img.shields.io/github/issues/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/issues/)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/issues?q=is%3Aissue+is%3Aclosed)
 
 ![thingiverse-card-demo](https://user-images.githubusercontent.com/73759882/164341651-66160d60-0567-4baf-8722-dc60d423d350.gif)
 
