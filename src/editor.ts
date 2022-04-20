@@ -45,20 +45,20 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
     return this._config?.name || '';
   }
 
-  get _api_url(): string {
-    return this._config?.api_url || '';
+  get _endpoints(): string {
+    return this._config?.endpoints || '';
+  }
+
+  get _api_key(): string {
+    return this._config?.api_key || '';
   }
 
   get _timer_interval(): number {
-    return this._config?.timer_interval || 10000;
+    return this._config?.timer_interval || 10;
   }
 
-  get _show_warning(): boolean {
-    return this._config?.show_warning || false;
-  }
-
-  get _show_error(): boolean {
-    return this._config?.show_error || false;
+  get _shuffle(): boolean {
+    return this._config?.shuffle || false;
   }
 
   protected render(): TemplateResult | void {
@@ -68,28 +68,27 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
 
     return html`
       <mwc-textfield
-        label="API Url"
-        .value=${this._api_url}
-        .configValue=${'api_url'}
+        label="API Key"
+        .value=${this._api_key}
+        .configValue=${'api_key'}
         @input=${this._valueChanged}
       ></mwc-textfield>
       <mwc-textfield
-        label="Timer Interval"
+        label="Endpoints"
+        .value=${this._endpoints}
+        .configValue=${'endpoints'}
+        @input=${this._valueChanged}
+      ></mwc-textfield>
+      <mwc-textfield
+        label="Timer Interval (seconds)"
         .value=${this._timer_interval}
         .configValue=${'timer_interval'}
         @input=${this._valueChanged}
       ></mwc-textfield>
-      <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
+      <mwc-formfield .label=${`Turn Shuffle ${this._shuffle ? 'off' : 'on'}`}>
         <mwc-switch
-          .checked=${this._show_warning !== false}
-          .configValue=${'show_warning'}
-          @change=${this._valueChanged}
-        ></mwc-switch>
-      </mwc-formfield>
-      <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}>
-        <mwc-switch
-          .checked=${this._show_error !== false}
-          .configValue=${'show_error'}
+          .checked=${this._shuffle !== false}
+          .configValue=${'shuffle'}
           @change=${this._valueChanged}
         ></mwc-switch>
       </mwc-formfield>

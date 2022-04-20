@@ -7,6 +7,11 @@ declare global {
   }
 }
 
+export interface APIThingiverseResponse {
+  total: number;
+  hits: Array<ThingiverseResponse>;
+}
+
 export interface ThingiverseResponse {
   id: number;
   name: string;
@@ -50,11 +55,12 @@ export interface TagsEntity {
   absolute_url: string;
 }
 
-// TODO Add your configuration elements here for type-checking
 export interface ProjectCardConfig extends LovelaceCardConfig {
   type: string;
   test_gui?: boolean;
-  api_url: string;
+  endpoints: string;
+  api_key: string;
+  shuffle?: boolean;
   timer_interval?: number;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;

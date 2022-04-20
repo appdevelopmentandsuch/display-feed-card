@@ -11,7 +11,7 @@ import {
   getLovelace,
 } from 'custom-card-helpers';
 import { repeat } from 'lit/directives/repeat.js';
-import type { ProjectCardConfig, ThingiverseResponse } from './types';
+import type { APIThingiverseResponse, ProjectCardConfig, ThingiverseResponse } from './types';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
@@ -41,6 +41,15 @@ export class ProjectCard extends LitElement {
     return {};
   }
 
+  private getSeconds(value?: number): number {
+    return value ? value * 1000 : 10000;
+  }
+
+  private generateURL(endpoint: string): string {
+    const appendChar = endpoint.includes('?') ? '&' : '?';
+    return `https://api.thingiverse.com/${endpoint}${appendChar}access_token=${this.config.api_key}`;
+  }
+
   updateDisplayCards(values: string | any[]): void {
     if (values && values.length > 0) {
       this.displayedCards.shift();
@@ -48,7 +57,7 @@ export class ProjectCard extends LitElement {
       this.currentIndex = (this.currentIndex + 1) % values.length;
       this.requestUpdate();
     }
-    setTimeout(() => this.updateDisplayCards(values), this.config.timer_interval);
+    setTimeout(() => this.updateDisplayCards(values), this.getSeconds(this.config.timer_interval));
   }
 
   @property({ attribute: false }) public hass!: HomeAssistant;
@@ -76,24 +85,46 @@ export class ProjectCard extends LitElement {
     this.config = {
       name: 'Project',
       ...config,
-      timer_interval: config.timer_interval || 10000,
+      endpoints: config.endpoints || '',
+      timer_interval: config.timer_interval || 5,
     };
   }
 
+  getRandomInt(max: number): number {
+    return Math.floor(Math.random() * max);
+  }
+
   async fetchThings(): Promise<void> {
-    const response = await fetch(this.config.api_url);
+    const results = await Promise.allSettled(
+      this.config.endpoints.split(',').map((endpoint) => fetch(this.generateURL(endpoint))),
+    );
 
-    this.apiResponse = await response.json();
+    const responses = await Promise.allSettled(
+      results
+        .filter((result) => result.status === 'fulfilled')
+        .map((p) => (p as unknown as PromiseFulfilledResult<Response>).value.json())
+        .flat(),
+    );
 
-    for (
-      this.currentIndex = 0;
-      this.currentIndex < 3 && this.currentIndex < this.apiResponse.length;
-      this.currentIndex++
-    ) {
-      this.displayedCards.push(this.apiResponse[this.currentIndex]);
+    this.apiResponse = responses
+      .filter((result) => result.status === 'fulfilled')
+      .map((p) => (p as unknown as PromiseFulfilledResult<APIThingiverseResponse>).value)
+      .map((response) => response.hits)
+      .flat();
+
+    console.log(this.apiResponse);
+
+    this.currentIndex =
+      this.config.shuffle && this.apiResponse.length - 3 > 0 ? this.getRandomInt(this.apiResponse.length) : 0;
+
+    for (let i = 0; i < 3; i++) {
+      if (this.displayedCards.find((card) => card.id === this.apiResponse[this.currentIndex].id) == null) {
+        this.displayedCards.push(this.apiResponse[this.currentIndex]);
+        this.currentIndex++;
+      }
     }
 
-    setTimeout(() => this.updateDisplayCards(this.apiResponse), this.config.timer_interval);
+    setTimeout(() => this.updateDisplayCards(this.apiResponse), this.getSeconds(this.config.timer_interval));
   }
 
   protected firstUpdated(): void {
