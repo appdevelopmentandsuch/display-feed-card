@@ -1,4 +1,4 @@
-# Thingiverse Card by [@bocklucas](https://www.github.com/bocklucas)
+# Thingiverse Card by [@appdevelopmentandsuch](https://www.github.com/appdevelopmentandsuch)
 
 ## Options
 
