@@ -1,40 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LitElement, html, TemplateResult, css, PropertyValues, CSSResultGroup } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
 import {
-  HomeAssistant,
-  hasConfigOrEntityChanged,
-  hasAction,
-  ActionHandlerEvent,
-  handleAction,
-  LovelaceCardEditor,
   getLovelace,
+  hasAction,
+  hasConfigOrEntityChanged,
+  HomeAssistant,
+  LovelaceCardEditor,
 } from 'custom-card-helpers';
+import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from 'lit';
+import { customElement, property, state } from 'lit/decorators';
 import { repeat } from 'lit/directives/repeat.js';
-import type { APIThingiverseResponse, ProjectCardConfig, ThingiverseResponse } from './types';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
+import type { APIThingiverseResponse, ThingiverseCardConfig, ThingiverseResponse } from './types';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  PROJECT-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
+  `%c  THINGIVERSE-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'project-card',
-  name: 'Project Card',
-  description: 'A template custom card for you to create something awesome',
+  type: 'thingiverse-card',
+  name: 'Thingiverse Card',
+  description: 'Display feeds of 3D models from Thingiverse',
 });
 
-@customElement('project-card')
-export class ProjectCard extends LitElement {
+@customElement('thingiverse-card')
+export class ThingiverseCard extends LitElement {
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
-    return document.createElement('project-card-editor');
+    return document.createElement('thingiverse-card-editor');
   }
 
   public static getStubConfig(): Record<string, unknown> {
@@ -71,9 +69,9 @@ export class ProjectCard extends LitElement {
   @property({ attribute: false })
   private currentIndex = 1;
 
-  @state() private config!: ProjectCardConfig;
+  @state() private config!: ThingiverseCardConfig;
 
-  public setConfig(config: ProjectCardConfig): void {
+  public setConfig(config: ThingiverseCardConfig): void {
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
     }

@@ -3,18 +3,18 @@ import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { ProjectCardConfig } from './types';
+import { ThingiverseCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
 import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
-@customElement('project-card-editor')
-export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+@customElement('thingiverse-card-editor')
+export class ThingiverseCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
-  @state() private _config?: ProjectCardConfig;
+  @state() private _config?: ThingiverseCardConfig;
 
   @state() private _helpers?: any;
 
@@ -27,7 +27,7 @@ export class ProjectCardEditor extends ScopedRegistryHost(LitElement) implements
     ...formfieldDefinition,
   };
 
-  public setConfig(config: ProjectCardConfig): void {
+  public setConfig(config: ThingiverseCardConfig): void {
     this._config = config;
 
     this.loadCardHelpers();

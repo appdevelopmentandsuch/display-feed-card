@@ -1,9 +1,9 @@
 resources:
-  - url: http://127.0.0.1:5000/project-card.js
+  - url: http://127.0.0.1:5000/thingiverse-card.js
     type: module
 views:
   - cards:
-      - type: custom:project-card
-        name: Project Card Development
+      - type: custom:thingiverse-card
+        name: Thingiverse Card Development
         entity: sun.sun
         test_gui: true

@@ -2,7 +2,7 @@ import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } fr
 
 declare global {
   interface HTMLElementTagNameMap {
-    'project-card-editor': LovelaceCardEditor;
+    'thingiverse-card-editor': LovelaceCardEditor;
     'hui-error-card': LovelaceCard;
   }
 }
@@ -55,14 +55,11 @@ export interface TagsEntity {
   absolute_url: string;
 }
 
-export interface ProjectCardConfig extends LovelaceCardConfig {
+export interface ThingiverseCardConfig extends LovelaceCardConfig {
   type: string;
   test_gui?: boolean;
-  endpoints: string;
   api_key: string;
+  endpoints: string;
   shuffle?: boolean;
   timer_interval?: number;
-  tap_action?: ActionConfig;
-  hold_action?: ActionConfig;
-  double_tap_action?: ActionConfig;
 }

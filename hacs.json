@@ -1,5 +1,5 @@
 {
-  "name": "Project Card",
+  "name": "Thingiverse Card",
   "render_readme": true,
-  "filename": "project-card.js"
+  "filename": "thingiverse-card.js"
 }

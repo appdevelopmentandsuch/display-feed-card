@@ -162,16 +162,15 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   }
 }
 
-// TODO You need to replace all instances of "action-handler-project" with "action-handler-<your card name>"
-customElements.define('action-handler-project', ActionHandler);
+customElements.define('action-handler-thingiverse-card', ActionHandler);
 
 const getActionHandler = (): ActionHandler => {
   const body = document.body;
-  if (body.querySelector('action-handler-project')) {
-    return body.querySelector('action-handler-project') as ActionHandler;
+  if (body.querySelector('action-handler-thingiverse-card')) {
+    return body.querySelector('action-handler-thingiverse-card') as ActionHandler;
   }
 
-  const actionhandler = document.createElement('action-handler-project');
+  const actionhandler = document.createElement('action-handler-thingiverse-card');
   body.appendChild(actionhandler);
 
   return actionhandler as ActionHandler;
