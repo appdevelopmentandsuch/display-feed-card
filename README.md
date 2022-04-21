@@ -1,5 +1,6 @@
 # Thingiverse Card by [@appdevelopmentandsuch](https://www.github.com/appdevelopmentandsuch)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/appdevelopmentandsuch/thingiverse-card/badge)](https://www.codefactor.io/repository/github/appdevelopmentandsuch/thingiverse-card)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/graphs/commit-activity)
 [![GitHub license](https://img.shields.io/github/license/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/appdevelopmentandsuch/thingiverse-card.svg)](https://github.com/appdevelopmentandsuch/thingiverse-card/releases/)
