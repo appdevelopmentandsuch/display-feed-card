@@ -13,7 +13,7 @@
 
 ## Setup
 
-1. Go to the [`thingiverse-card` release page](https://github.com/appdevelopmentandsuch/thingiverse-card/releases), download `thingiverse-card.js` and upload it to `<config>/www/` on your Home Assistant instance.
+1. Go to the [`thingiverse-card` release page](https://github.com/appdevelopmentandsuch/thingiverse-card/releases), download `thingiverse-card.js`, `thingiverse-card-[some_hash].js`, and `editor-[another_hash].js` and upload them to `<config>/www/` on your Home Assistant instance.
 2. In your Home Assistant instance, go to `Configuration -> Dashboards -> Resources` and add the following resource: `/local/thingiverse-card.js`
 3. Restart your Home Assistant Server.
 4. Go to a Dashboard and add a `Thingiverse Card`.
