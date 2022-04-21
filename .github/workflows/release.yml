@@ -26,4 +26,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: /home/runner/work/thingiverse-card/thingiverse-card/dist/*
           tag: ${{ github.ref }}
+          file_glob: true
           overwrite: true
