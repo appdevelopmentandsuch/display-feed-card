@@ -12,27 +12,27 @@ import { repeat } from 'lit/directives/repeat.js';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
-import type { APIThingiverseResponse, ThingiverseCardConfig, ThingiverseResponse } from './types';
+import type { DisplayFeedCardConfig, DisplayCard } from './types';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  THINGIVERSE-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
+  `%c  DisplayFeed-CARD \n%c  ${localize('common.version')} ${CARD_VERSION}    `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'thingiverse-card',
-  name: 'Thingiverse Card',
-  description: 'Display feeds of 3D models from Thingiverse',
+  type: 'display-feed-card',
+  name: 'Display-Feed Card',
+  description: 'Display feeds of 3D models from Display-Feed',
 });
 
-@customElement('thingiverse-card')
-export class ThingiverseCard extends LitElement {
+@customElement('display-feed-card')
+export class DisplayFeedCard extends LitElement {
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
-    return document.createElement('thingiverse-card-editor');
+    return document.createElement('display-feed-card-editor');
   }
 
   public static getStubConfig(): Record<string, unknown> {
@@ -41,11 +41,6 @@ export class ThingiverseCard extends LitElement {
 
   private getSeconds(value?: number): number {
     return value ? value * 1000 : 10000;
-  }
-
-  private generateURL(endpoint: string): string {
-    const appendChar = endpoint.includes('?') ? '&' : '?';
-    return `https://api.thingiverse.com/${endpoint}${appendChar}access_token=${this.config.api_key}&per_page=50`;
   }
 
   updateDisplayCards(values: string | any[]): void {
@@ -61,17 +56,17 @@ export class ThingiverseCard extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
 
   @property({ attribute: false })
-  private apiResponse: Array<ThingiverseResponse> = [];
+  private displayedCards: Array<DisplayCard> = [];
 
   @property({ attribute: false })
-  private displayedCards: Array<ThingiverseResponse> = [];
+  private values: Array<DisplayCard> = [];
 
   @property({ attribute: false })
   private currentIndex = 1;
 
-  @state() private config!: ThingiverseCardConfig;
+  @state() private config!: DisplayFeedCardConfig;
 
-  public setConfig(config: ThingiverseCardConfig): void {
+  public setConfig(config: DisplayFeedCardConfig): void {
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
     }
@@ -91,37 +86,19 @@ export class ThingiverseCard extends LitElement {
     return Math.floor(Math.random() * max);
   }
 
-  async fetchThings(): Promise<void> {
-    const results = await Promise.allSettled(
-      this.config.endpoints.split(',').map((endpoint) => fetch(this.generateURL(endpoint))),
-    );
+  fetchThings(): void {
+    this.values = this.hass.states[this.config.entity].attributes.values;
 
-    const responses = await Promise.allSettled(
-      results
-        .filter((result) => result.status === 'fulfilled')
-        .map((p) => (p as unknown as PromiseFulfilledResult<Response>).value.json())
-        .flat(),
-    );
-
-    this.apiResponse = responses
-      .filter((result) => result.status === 'fulfilled')
-      .map((p) => (p as unknown as PromiseFulfilledResult<APIThingiverseResponse>).value)
-      .map((response) => response.hits)
-      .flat();
-
-    console.log(this.apiResponse);
-
-    this.currentIndex =
-      this.config.shuffle && this.apiResponse.length - 3 > 0 ? this.getRandomInt(this.apiResponse.length) : 0;
+    this.currentIndex = this.config.shuffle && this.values.length - 3 > 0 ? this.getRandomInt(this.values.length) : 0;
 
     for (let i = 0; i < 3; i++) {
-      if (this.displayedCards.find((card) => card.id === this.apiResponse[this.currentIndex].id) == null) {
-        this.displayedCards.push(this.apiResponse[this.currentIndex]);
+      if (this.displayedCards.find((card) => card.id === this.values[this.currentIndex].id) == null) {
+        this.displayedCards.push(this.values[this.currentIndex]);
         this.currentIndex++;
       }
     }
 
-    setTimeout(() => this.updateDisplayCards(this.apiResponse), this.getSeconds(this.config.timer_interval));
+    setTimeout(() => this.updateDisplayCards(this.values), this.getSeconds(this.config.timer_interval));
   }
 
   protected firstUpdated(): void {
@@ -143,7 +120,7 @@ export class ThingiverseCard extends LitElement {
         (displayedCard) => displayedCard.id,
         (entry) =>
           html`<ha-card
-            @action=${() => this._handleAction(entry.public_url)}
+            @action=${() => this._handleAction(entry.url)}
             .actionHandler=${actionHandler({
               hasHold: hasAction(this.config.hold_action),
               hasDoubleClick: hasAction(this.config.double_tap_action),
@@ -151,10 +128,10 @@ export class ThingiverseCard extends LitElement {
             .label=${entry?.name}
             tabindex="0"
           >
-            <img src=${entry?.thumbnail} style="width: 100%; height: 100%;" />
+            <img src=${entry?.image} style="width: 100%; height: 100%;" />
             <h4>${entry?.name}</h4>
-            <h5>${entry?.creator?.name}</h5>
-            <img src="https://thingiverse.com/favicon.ico" style="width: 1.5rem; height: 1.5rem;" />
+            <h5>${entry?.creator}</h5>
+            <img src=${entry?.favico} style="width: 1.5rem; height: 1.5rem;" />
           </ha-card>`,
       )}
     `;

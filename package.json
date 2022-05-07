@@ -1,7 +1,7 @@
 {
-  "name": "thingiverse-card",
+  "name": "display-feed-card",
   "version": "0.0.0",
-  "description": "Lovelace thingiverse-card",
+  "description": "Lovelace display-feed-card",
   "keywords": [
     "home-assistant",
     "homeassistant",
@@ -10,8 +10,8 @@
     "lovelace",
     "custom-cards"
   ],
-  "module": "thingiverse-card.js",
-  "repository": "git@github.com:bocklucas/thingiverse-card.git",
+  "module": "display-feed-card.js",
+  "repository": "git@github.com:bocklucas/display-feed-card.git",
   "author": "Lucas Bock <bocklucas@yahoo.ca>",
   "license": "MIT",
   "dependencies": {

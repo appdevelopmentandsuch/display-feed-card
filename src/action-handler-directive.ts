@@ -162,15 +162,15 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   }
 }
 
-customElements.define('action-handler-thingiverse-card', ActionHandler);
+customElements.define('action-handler-display-feed-card', ActionHandler);
 
 const getActionHandler = (): ActionHandler => {
   const body = document.body;
-  if (body.querySelector('action-handler-thingiverse-card')) {
-    return body.querySelector('action-handler-thingiverse-card') as ActionHandler;
+  if (body.querySelector('action-handler-display-feed-card')) {
+    return body.querySelector('action-handler-display-feed-card') as ActionHandler;
   }
 
-  const actionhandler = document.createElement('action-handler-thingiverse-card');
+  const actionhandler = document.createElement('action-handler-display-feed-card');
   body.appendChild(actionhandler);
 
   return actionhandler as ActionHandler;

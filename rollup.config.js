@@ -39,7 +39,7 @@ const plugins = [
 
 export default [
   {
-    input: 'src/thingiverse-card.ts',
+    input: 'src/display-feed-card.ts',
     output: {
       dir: 'dist',
       format: 'es',

@@ -1,5 +1,5 @@
 {
-  "name": "Thingiverse Card",
+  "name": "Display-Feed Card",
   "render_readme": true,
-  "filename": "thingiverse-card.js"
+  "filename": "display-feed-card.js"
 }

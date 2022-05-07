@@ -1,9 +1,9 @@
 resources:
-  - url: http://127.0.0.1:5000/thingiverse-card.js
+  - url: http://127.0.0.1:5000/display-feed-card.js
     type: module
 views:
   - cards:
-      - type: custom:thingiverse-card
-        name: Thingiverse Card Development
+      - type: custom:display-feed-card
+        name: Display-Feed Card Development
         entity: sun.sun
         test_gui: true

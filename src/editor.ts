@@ -3,18 +3,18 @@ import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { ThingiverseCardConfig } from './types';
+import { DisplayFeedCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
 import { formfieldDefinition } from '../elements/formfield';
 import { selectDefinition } from '../elements/select';
 import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
-@customElement('thingiverse-card-editor')
-export class ThingiverseCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+@customElement('display-feed-card-editor')
+export class DisplayFeedCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
-  @state() private _config?: ThingiverseCardConfig;
+  @state() private _config?: DisplayFeedCardConfig;
 
   @state() private _helpers?: any;
 
@@ -27,7 +27,7 @@ export class ThingiverseCardEditor extends ScopedRegistryHost(LitElement) implem
     ...formfieldDefinition,
   };
 
-  public setConfig(config: ThingiverseCardConfig): void {
+  public setConfig(config: DisplayFeedCardConfig): void {
     this._config = config;
 
     this.loadCardHelpers();
@@ -45,12 +45,8 @@ export class ThingiverseCardEditor extends ScopedRegistryHost(LitElement) implem
     return this._config?.name || '';
   }
 
-  get _endpoints(): string {
-    return this._config?.endpoints || '';
-  }
-
-  get _api_key(): string {
-    return this._config?.api_key || '';
+  get _entity(): string {
+    return this._config?.entity || '';
   }
 
   get _timer_interval(): number {
@@ -66,19 +62,22 @@ export class ThingiverseCardEditor extends ScopedRegistryHost(LitElement) implem
       return html``;
     }
 
+    const entities = Object.keys(this.hass.states);
+
     return html`
-      <mwc-textfield
-        label="API Key"
-        .value=${this._api_key}
-        .configValue=${'api_key'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
-      <mwc-textfield
-        label="Endpoints"
-        .value=${this._endpoints}
-        .configValue=${'endpoints'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
+      <mwc-select
+        naturalMenuWidth
+        fixedMenuPosition
+        label="Entity (Required)"
+        .configValue=${'entity'}
+        .value=${this._entity}
+        @selected=${this._valueChanged}
+        @closed=${(ev) => ev.stopPropagation()}
+      >
+        ${entities.map((entity) => {
+          return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
+        })}
+      </mwc-select>
       <mwc-textfield
         label="Timer Interval (seconds)"
         .value=${this._timer_interval}

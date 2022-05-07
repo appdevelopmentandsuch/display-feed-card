@@ -1,6 +1,6 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
-  "name": "Thingiverse Card Development",
+  "name": "Display-Feed Card Development",
   "image": "ludeeus/container:monster",
   "context": "..",
   "appPort": ["5000:5000", "9123:8123"],
