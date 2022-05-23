@@ -22,4 +22,5 @@ export interface DisplayFeedCardConfig extends LovelaceCardConfig {
   entity: string;
   shuffle?: boolean;
   timer_interval?: number;
+  max_displayed: number;
 }

@@ -72,6 +72,7 @@ attributes: {
 | entity         | string  | **Required** | The entity in your Home Assistant instance the feeds are coming from |         | `sensor.display_feed`      |
 | shuffle        | boolean | **Optional** | Shuffle the start order of the cards                                 | `false` |                            |
 | timer_interval | number  | **Optional** | Duration in seconds between cycling through cards                    | `10`    | `5`                        |
+| max_displayed  | number  | **Optional** | The number of cards to display at any given time, `-1` for all cards | `-1`    | `5`                        |
 
 ## Node Red Example
 

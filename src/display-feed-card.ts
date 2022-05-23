@@ -89,16 +89,23 @@ export class DisplayFeedCard extends LitElement {
   fetchThings(): void {
     this.values = this.hass.states[this.config.entity].attributes.values;
 
-    this.currentIndex = this.config.shuffle && this.values.length - 3 > 0 ? this.getRandomInt(this.values.length) : 0;
+    const max =
+      this.config.max_displayed === -1 || this.config.max_displayed == undefined
+        ? this.values.length
+        : this.config.max_displayed;
 
-    for (let i = 0; i < 3; i++) {
+    this.currentIndex = this.config.shuffle && this.values.length - max > 0 ? this.getRandomInt(this.values.length) : 0;
+
+    for (let i = 0; i < max; i++) {
       if (this.displayedCards.find((card) => card.id === this.values[this.currentIndex].id) == null) {
         this.displayedCards.push(this.values[this.currentIndex]);
         this.currentIndex++;
       }
     }
 
-    setTimeout(() => this.updateDisplayCards(this.values), this.getSeconds(this.config.timer_interval));
+    if (this.config.max_displayed !== -1 && this.config.max_displayed != undefined) {
+      setTimeout(() => this.updateDisplayCards(this.values), this.getSeconds(this.config.timer_interval));
+    }
   }
 
   protected firstUpdated(): void {
