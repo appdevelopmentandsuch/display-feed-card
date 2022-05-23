@@ -90,7 +90,9 @@ export class DisplayFeedCard extends LitElement {
     this.values = this.hass.states[this.config.entity].attributes.values;
 
     const max =
-      this.config.max_displayed === -1 || this.config.max_displayed == undefined
+      this.config.max_displayed === -1 ||
+      this.config.max_displayed == undefined ||
+      this.config.max_displayed >= this.values.length
         ? this.values.length
         : this.config.max_displayed;
 
