@@ -11,7 +11,8 @@ export interface DisplayCard {
   id: string;
   name: string;
   creator: string;
-  image: string;
+  description?: string;
+  image?: string;
   url: string;
   favico: string;
 }
@@ -21,6 +22,4 @@ export interface DisplayFeedCardConfig extends LovelaceCardConfig {
   test_gui?: boolean;
   entity: string;
   shuffle?: boolean;
-  timer_interval?: number;
-  max_displayed: number;
 }

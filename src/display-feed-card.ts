@@ -25,7 +25,7 @@ console.info(
 (window as any).customCards.push({
   type: 'display-feed-card',
   name: 'Display-Feed Card',
-  description: 'Display feeds of 3D models from Display-Feed',
+  description: 'Display feeds of entities from Display-Feed',
 });
 
 @customElement('display-feed-card')
@@ -37,20 +37,6 @@ export class DisplayFeedCard extends LitElement {
 
   public static getStubConfig(): Record<string, unknown> {
     return {};
-  }
-
-  private getSeconds(value?: number): number {
-    return value ? value * 1000 : 10000;
-  }
-
-  updateDisplayCards(values: string | any[]): void {
-    if (values && values.length > 0) {
-      this.displayedCards.shift();
-      this.displayedCards.push(values[this.currentIndex]);
-      this.currentIndex = (this.currentIndex + 1) % values.length;
-      this.requestUpdate();
-    }
-    setTimeout(() => this.updateDisplayCards(values), this.getSeconds(this.config.timer_interval));
   }
 
   @property({ attribute: false }) public hass!: HomeAssistant;
@@ -86,15 +72,10 @@ export class DisplayFeedCard extends LitElement {
     return Math.floor(Math.random() * max);
   }
 
-  fetchThings(): void {
+  protected firstUpdated(): void {
     this.values = this.hass.states[this.config.entity].attributes.values;
 
-    const max =
-      this.config.max_displayed === -1 ||
-      this.config.max_displayed == undefined ||
-      this.config.max_displayed >= this.values.length
-        ? this.values.length
-        : this.config.max_displayed;
+    const max = this.values.length;
 
     this.currentIndex = this.config.shuffle && this.values.length - max > 0 ? this.getRandomInt(this.values.length) : 0;
 
@@ -104,14 +85,6 @@ export class DisplayFeedCard extends LitElement {
         this.currentIndex++;
       }
     }
-
-    if (this.config.max_displayed !== -1 && this.config.max_displayed != undefined) {
-      setTimeout(() => this.updateDisplayCards(this.values), this.getSeconds(this.config.timer_interval));
-    }
-  }
-
-  protected firstUpdated(): void {
-    this.fetchThings();
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -137,10 +110,11 @@ export class DisplayFeedCard extends LitElement {
             .label=${entry?.name}
             tabindex="0"
           >
-            <img src=${entry?.image} style="width: 100%; height: 100%;" />
-            <h4>${entry?.name}</h4>
-            <h5>${entry?.creator}</h5>
-            <img src=${entry?.favico} style="width: 1.5rem; height: 1.5rem;" />
+            ${entry?.image && html`<img src=${entry?.image} style="width: 100%; height: 100%;" />`}
+            ${entry?.name && html`<h2>${entry?.name}</h2>`}
+            ${entry?.creator && html`<h3>${entry?.creator}</h3>`}
+            ${entry?.description && html`<p>${entry?.description}</p>`}
+            ${entry?.favico && html`<img src=${entry?.favico} style="width: 1.5rem; height: 1.5rem;" />`}
           </ha-card>`,
       )}
     `;
@@ -158,6 +132,14 @@ export class DisplayFeedCard extends LitElement {
         padding: 1rem;
         margin-bottom: 0.75rem;
         cursor: pointer;
+      }
+
+      h2 {
+        padding: 0.5rem;
+      }
+
+      h3 {
+        padding: 0.5rem;
       }
     `;
   }
