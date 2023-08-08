@@ -102,7 +102,7 @@ export class DisplayFeedCard extends LitElement {
         (displayedCard) => displayedCard.id,
         (entry) =>
           html`<ha-card
-            @action=${() => this._handleAction(entry.url)}
+            @action=${() => this._handleAction(entry?.url)}
             .actionHandler=${actionHandler({
               hasHold: hasAction(this.config.hold_action),
               hasDoubleClick: hasAction(this.config.double_tap_action),

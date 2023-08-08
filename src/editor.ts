@@ -45,16 +45,8 @@ export class DisplayFeedCardEditor extends ScopedRegistryHost(LitElement) implem
     return this._config?.name || '';
   }
 
-  get _max_displayed(): number {
-    return this._config?.max_displayed || -1;
-  }
-
   get _entity(): string {
     return this._config?.entity || '';
-  }
-
-  get _timer_interval(): number {
-    return this._config?.timer_interval || 10;
   }
 
   get _shuffle(): boolean {
@@ -82,18 +74,6 @@ export class DisplayFeedCardEditor extends ScopedRegistryHost(LitElement) implem
           return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
         })}
       </mwc-select>
-      <mwc-textfield
-        label="Timer Interval (seconds)"
-        .value=${this._timer_interval}
-        .configValue=${'timer_interval'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
-      <mwc-textfield
-        label="Max Cards Displayed (-1 displays all cards)"
-        .value=${this._max_displayed}
-        .configValue=${'max_displayed'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
       <mwc-formfield .label=${`Turn Shuffle ${this._shuffle ? 'off' : 'on'}`}>
         <mwc-switch
           .checked=${this._shuffle !== false}

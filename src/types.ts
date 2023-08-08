@@ -9,12 +9,12 @@ declare global {
 
 export interface DisplayCard {
   id: string;
-  name: string;
-  creator: string;
+  name?: string;
+  creator?: string;
   description?: string;
   image?: string;
-  url: string;
-  favico: string;
+  url?: string;
+  favico?: string;
 }
 
 export interface DisplayFeedCardConfig extends LovelaceCardConfig {
