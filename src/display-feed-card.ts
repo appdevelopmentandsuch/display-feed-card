@@ -98,8 +98,8 @@ export class DisplayFeedCard extends LitElement {
   protected render(): TemplateResult | void {
     return html`
       ${repeat(
-        this.displayedCards,
-        (displayedCard) => displayedCard.id,
+        this.hass.states[this.config.entity].attributes.values,
+        (displayedCard: DisplayCard) => displayedCard.id,
         (entry) =>
           html`<ha-card
             @action=${() => this._handleAction(entry?.url)}
